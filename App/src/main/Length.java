@@ -2,13 +2,15 @@ package com.apps.quantitymeasurement;
 
 public class Length {
 
-    private final double value;
-    private final LengthUnit unit;
+    private double value;
+    private LengthUnit unit;
 
-    // Enum for units
+    // Enum with conversion factors (base = inches)
     public enum LengthUnit {
         FEET(12.0),
-        INCHES(1.0);
+        INCHES(1.0),
+        YARDS(36.0),
+        CENTIMETERS(0.393701);
 
         private final double conversionFactor;
 
@@ -23,9 +25,6 @@ public class Length {
 
     // Constructor
     public Length(double value, LengthUnit unit) {
-        if (unit == null) {
-            throw new IllegalArgumentException("Unit cannot be null");
-        }
         this.value = value;
         this.unit = unit;
     }
@@ -36,22 +35,17 @@ public class Length {
     }
 
     // Compare two Length objects
-    public boolean compare(Length other) {
-        if (other == null) return false;
-
-        return Double.compare(
-                this.convertToBaseUnit(),
-                other.convertToBaseUnit()
-        ) == 0;
+    public boolean compare(Length thatLength) {
+        return Math.abs(this.convertToBaseUnit() - thatLength.convertToBaseUnit()) < 0.0001;
     }
 
+    // Override equals()
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null) return false;
-        if (this.getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Length other = (Length) o;
-        return this.compare(other);
+        Length that = (Length) o;
+        return this.compare(that);
     }
 }
