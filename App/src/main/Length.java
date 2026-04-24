@@ -5,7 +5,6 @@ public class Length {
     private double value;
     private LengthUnit unit;
 
-    // Enum with conversion factors (base = inches)
     public enum LengthUnit {
         FEET(12.0),
         INCHES(1.0),
@@ -23,23 +22,19 @@ public class Length {
         }
     }
 
-    // Constructor
     public Length(double value, LengthUnit unit) {
         this.value = value;
         this.unit = unit;
     }
 
-    // Convert to base unit (inches)
     private double convertToBaseUnit() {
         return this.value * this.unit.getConversionFactor();
     }
 
-    // Compare two Length objects
-    public boolean compare(Length thatLength) {
-        return Math.abs(this.convertToBaseUnit() - thatLength.convertToBaseUnit()) < 0.0001;
+    public boolean compare(Length that) {
+        return Math.abs(this.convertToBaseUnit() - that.convertToBaseUnit()) < 0.0001;
     }
 
-    // Override equals()
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,5 +42,23 @@ public class Length {
 
         Length that = (Length) o;
         return this.compare(that);
+    }
+
+    public Length convertTo(LengthUnit targetUnit) {
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("Target unit cannot be null");
+        }
+
+        double baseValue = convertToBaseUnit();
+        double convertedValue = baseValue / targetUnit.getConversionFactor();
+
+        convertedValue = Math.round(convertedValue * 100.0) / 100.0;
+
+        return new Length(convertedValue, targetUnit);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%.2f %s", value, unit);
     }
 }
