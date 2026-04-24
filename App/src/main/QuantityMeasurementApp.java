@@ -8,11 +8,7 @@ public class QuantityMeasurementApp {
 
     public static boolean demonstrateLengthComparison(double v1, Length.LengthUnit u1,
                                                       double v2, Length.LengthUnit u2) {
-
-        Length l1 = new Length(v1, u1);
-        Length l2 = new Length(v2, u2);
-
-        return l1.equals(l2);
+        return new Length(v1, u1).equals(new Length(v2, u2));
     }
 
     public static Length demonstrateLengthConversion(double value,
@@ -23,8 +19,7 @@ public class QuantityMeasurementApp {
             throw new IllegalArgumentException("Invalid input");
         }
 
-        Length length = new Length(value, fromUnit);
-        return length.convertTo(toUnit);
+        return new Length(value, fromUnit).convertTo(toUnit);
     }
 
     public static Length demonstrateLengthConversion(Length length,
@@ -37,15 +32,25 @@ public class QuantityMeasurementApp {
         return length.convertTo(toUnit);
     }
 
+    // ✅ UC6 ADDITION METHOD
+    public static Length demonstrateLengthAddition(Length l1, Length l2) {
+        if (l1 == null || l2 == null) {
+            throw new IllegalArgumentException("Invalid input");
+        }
+
+        return l1.add(l2);
+    }
+
     public static void main(String[] args) {
 
-        System.out.println(demonstrateLengthConversion(1, Length.LengthUnit.FEET,
-                Length.LengthUnit.INCHES));
+        System.out.println(demonstrateLengthAddition(
+                new Length(1, Length.LengthUnit.FEET),
+                new Length(12, Length.LengthUnit.INCHES)
+        ));
 
-        System.out.println(demonstrateLengthConversion(2, Length.LengthUnit.YARDS,
-                Length.LengthUnit.INCHES));
-
-        System.out.println(demonstrateLengthConversion(100, Length.LengthUnit.CENTIMETERS,
-                Length.LengthUnit.INCHES));
+        System.out.println(demonstrateLengthAddition(
+                new Length(1, Length.LengthUnit.YARDS),
+                new Length(3, Length.LengthUnit.FEET)
+        ));
     }
 }

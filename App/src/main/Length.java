@@ -31,6 +31,10 @@ public class Length {
         return this.value * this.unit.getConversionFactor();
     }
 
+    private double convertFromBase(double baseValue, LengthUnit targetUnit) {
+        return baseValue / targetUnit.getConversionFactor();
+    }
+
     public boolean compare(Length that) {
         return Math.abs(this.convertToBaseUnit() - that.convertToBaseUnit()) < 0.0001;
     }
@@ -49,12 +53,27 @@ public class Length {
             throw new IllegalArgumentException("Target unit cannot be null");
         }
 
-        double baseValue = convertToBaseUnit();
-        double convertedValue = baseValue / targetUnit.getConversionFactor();
+        double base = convertToBaseUnit();
+        double result = convertFromBase(base, targetUnit);
 
-        convertedValue = Math.round(convertedValue * 100.0) / 100.0;
+        result = Math.round(result * 100.0) / 100.0;
 
-        return new Length(convertedValue, targetUnit);
+        return new Length(result, targetUnit);
+    }
+
+    // ✅ UC6 ADDITION METHOD
+    public Length add(Length that) {
+        if (that == null) {
+            throw new IllegalArgumentException("Length cannot be null");
+        }
+
+        double baseSum = this.convertToBaseUnit() + that.convertToBaseUnit();
+
+        double result = convertFromBase(baseSum, this.unit);
+
+        result = Math.round(result * 100.0) / 100.0;
+
+        return new Length(result, this.unit);
     }
 
     @Override
